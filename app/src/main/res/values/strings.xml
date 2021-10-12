@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">TestProject</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="locationFragmentLabel">location</string>
+    <string name="locationsTV">ЛОКАЦИИ</string>
+    <string name="without_name">Без названия</string>
+    <string name="package_name">Название локации</string>
+    <string name="delete">Удалить</string>
+</resources>
