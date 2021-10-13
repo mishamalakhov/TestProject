@@ -14,7 +14,7 @@ class LocationViewModel : ViewModel() {
         LocationRepository.get()?.setLocation(location)
     }
 
-    fun loadPhotosToDB(location: LocationType, pack: PhotosPackage, bitmap: Bitmap, id:String){
+    fun loadPhotosToDB(location: LocationType, pack: PhotosPackage?, bitmap: Bitmap, id:String){
         LocationRepository.get()?.loadPhotos(location, pack, bitmap, id)
     }
 
@@ -23,6 +23,6 @@ class LocationViewModel : ViewModel() {
     }
 
     fun deletePackageFromDB(location: LocationType, pack: PhotosPackage){
-        LocationRepository.get()?.deletePackage(location,pack)
+        LocationRepository.get()?.deletePackage(location, pack)
     }
 }

@@ -8,4 +8,5 @@
     <string name="without_name">Без названия</string>
     <string name="package_name">Название локации</string>
     <string name="delete">Удалить</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

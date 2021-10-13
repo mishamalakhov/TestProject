@@ -2,12 +2,12 @@ package android.malakhov.testproject.data.location
 
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class LocationType() {
 
     var id: String = UUID.randomUUID().toString()
     var name: String = "Без названия"
-    var packageCount = -1
-    var packagesList: ArrayList<PhotosPackage> = ArrayList<PhotosPackage>()
+    var packagesList = HashMap<String, PhotosPackage>()
 
 }

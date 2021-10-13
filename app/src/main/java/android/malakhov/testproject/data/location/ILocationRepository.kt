@@ -6,7 +6,7 @@ interface ILocationRepository {
 
     fun setLocation(location: LocationType)
     fun loadPhotos(
-        location: LocationType, pack: PhotosPackage, bitmap: Bitmap,
+        location: LocationType, pack: PhotosPackage?, bitmap: Bitmap,
         id: String
     )
 

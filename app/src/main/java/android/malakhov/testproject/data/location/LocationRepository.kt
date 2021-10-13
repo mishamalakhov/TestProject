@@ -32,11 +32,11 @@ class LocationRepository : ILocationRepository {
     //Saves photos in Storage  by way(location name/package name/ photo id(id = key from uriList-hashMap))
     //and then update a uri in package in firestore
     override fun loadPhotos(
-        location: LocationType, pack: PhotosPackage, bitmap: Bitmap,
+        location: LocationType, pack: PhotosPackage?, bitmap: Bitmap,
         id: String
     ) {
 
-        val locationRef = storageRef?.child(location.id)?.child(pack.id)
+        val locationRef = storageRef?.child(location.id)?.child(pack?.id!!)
             ?.child(id)
 
         var uploadURI: Uri?
@@ -49,8 +49,8 @@ class LocationRepository : ILocationRepository {
         val task = up!!.continueWithTask<Uri> { locationRef.downloadUrl }
             .addOnCompleteListener { task ->
                 uploadURI = task.result
-                pack.uriList[id] = uploadURI.toString()
-                location.packagesList[pack.index] = pack
+                pack?.uriList!![id] = uploadURI.toString()
+                location.packagesList[pack.id] = pack
                 collection?.document(location.id)?.set(location)
             }
     }
@@ -71,18 +71,28 @@ class LocationRepository : ILocationRepository {
                 ?.addOnSuccessListener { it1 ->
                     // Got the download URL for
                     val url = it1.toString()
-                    Log.d("gdgd",url)
                     FirebaseDB.get()?.getStorage()?.getReferenceFromUrl(url)?.delete()
                 }
         }
-        location.packagesList[pack.index] = pack
+        location.packagesList[pack.id] = pack
         ref?.update("packagesList", location.packagesList)
 
     }
 
     override fun deletePackage(location: LocationType, pack: PhotosPackage) {
+        //delete package from firestor
         val ref = collection?.document(location.id)
         ref?.update("packagesList", location.packagesList)
+
+        //delete package with photos from storage
+        pack.uriList.forEach{
+            storageRef?.child(location.id+"/"+pack.id+"/"+it.key)?.downloadUrl
+                ?.addOnSuccessListener { it1 ->
+                    // Got the download URL for
+                    val url = it1.toString()
+                    FirebaseDB.get()?.getStorage()?.getReferenceFromUrl(url)?.delete()
+                }
+        }
     }
 
 }
