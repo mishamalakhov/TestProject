@@ -33,13 +33,11 @@ class LocationRepository : ILocationRepository {
 
     //Saves photos in Storage  by way(location name/package name/ photo id(id = key from uriList-hashMap))
     //and then update a uri in package in firestore
-    suspend override fun loadPhotos(
+     override fun loadPhotos(
         location: LocationType, pack: PhotosPackage?, bitmap: Bitmap,
         id: String
     ) {
 
-
-        GlobalScope.async {
             val locationRef = storageRef?.child(location.id)?.child(pack?.id!!)
                 ?.child(id)
 
@@ -57,7 +55,6 @@ class LocationRepository : ILocationRepository {
                     location.packagesList[pack.id] = pack
                     collection?.document(location.id)?.set(location)
                 }
-        }
     }
 
     //Delete photos from Storage and FireStore

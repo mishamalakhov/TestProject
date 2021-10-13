@@ -17,9 +17,7 @@ class LocationViewModel : ViewModel() {
     }
 
     fun loadPhotosToDB(location: LocationType, pack: PhotosPackage?, bitmap: Bitmap, id:String){
-        GlobalScope.launch {
             LocationRepository.get()?.loadPhotos(location, pack, bitmap, id)
-        }
     }
 
     fun deletePhotosFromDB(location: LocationType,pack: PhotosPackage, list: ArrayList<String>){
