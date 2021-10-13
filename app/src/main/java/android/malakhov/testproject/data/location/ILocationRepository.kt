@@ -5,7 +5,7 @@ import android.graphics.Bitmap
 interface ILocationRepository {
 
     fun setLocation(location: LocationType)
-    fun loadPhotos(
+    suspend fun loadPhotos(
         location: LocationType, pack: PhotosPackage?, bitmap: Bitmap,
         id: String
     )

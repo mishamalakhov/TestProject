@@ -5,6 +5,8 @@ import android.malakhov.testproject.data.location.LocationRepository
 import android.malakhov.testproject.data.location.LocationType
 import android.malakhov.testproject.data.location.PhotosPackage
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class LocationViewModel : ViewModel() {
 
@@ -15,7 +17,9 @@ class LocationViewModel : ViewModel() {
     }
 
     fun loadPhotosToDB(location: LocationType, pack: PhotosPackage?, bitmap: Bitmap, id:String){
-        LocationRepository.get()?.loadPhotos(location, pack, bitmap, id)
+        GlobalScope.launch {
+            LocationRepository.get()?.loadPhotos(location, pack, bitmap, id)
+        }
     }
 
     fun deletePhotosFromDB(location: LocationType,pack: PhotosPackage, list: ArrayList<String>){

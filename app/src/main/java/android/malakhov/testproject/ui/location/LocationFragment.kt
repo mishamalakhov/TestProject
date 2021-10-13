@@ -13,6 +13,7 @@ import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.*
 import android.widget.*
 import androidx.databinding.DataBindingUtil
@@ -118,17 +119,19 @@ class LocationFragment : Fragment() {
 
 
             if (data?.clipData != null) {
-                val count: Int = data.clipData!!.getItemCount()
+                val count: Int = data.clipData!!.itemCount
 
                 for (i in 0 until count) {
 
-                    val uri: Uri = data.clipData!!.getItemAt(i).getUri()
+                    val uri: Uri = data.clipData!!.getItemAt(i).uri
 
                     val id = UUID.randomUUID().toString()
                     pack?.uriList?.set(id, uri.toString())
                     adapter?.notifyDataSetChanged()
                     loadLocationToDB()
-                    loadPhotosToDB(uri.toString(), pack, id)
+                    GlobalScope.launch {
+                        loadPhotosToDB(uri.toString(), pack, id)
+                    }
                 }
             }
             else{
@@ -136,21 +139,25 @@ class LocationFragment : Fragment() {
                 pack?.uriList?.set(id, data?.data.toString())
                 adapter?.notifyDataSetChanged()
                 loadLocationToDB()
-                loadPhotosToDB(data?.data.toString(), pack, id)
+                GlobalScope.launch {
+                    loadPhotosToDB(data?.data.toString(), pack, id)
+                }
             }
     }
 
     //Load photos into DB
-    fun loadPhotosToDB(uri: String, pack: PhotosPackage?, id: String) {
-        val bitmap = MediaStore.Images.Media.getBitmap(
-            activity?.contentResolver,
-            Uri.parse(uri)
-        )
-        viewModel.loadPhotosToDB(location, pack, bitmap, id)
+    suspend fun loadPhotosToDB(uri: String, pack: PhotosPackage?, id: String) {
+        GlobalScope.async {
+            val bitmap = MediaStore.Images.Media.getBitmap(
+                activity?.contentResolver,
+                Uri.parse(uri)
+            )
+            viewModel.loadPhotosToDB(location, pack, bitmap, id)
+        }
     }
 
     //Load location into DB
-    fun loadLocationToDB() {
+     fun loadLocationToDB() {
         viewModel.setLocation(location)
     }
 

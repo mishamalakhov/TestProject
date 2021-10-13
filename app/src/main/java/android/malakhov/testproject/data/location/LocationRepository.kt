@@ -5,6 +5,8 @@ import android.malakhov.testproject.data.FirebaseDB
 import android.net.Uri
 import android.util.Log
 import com.google.firebase.storage.UploadTask
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import java.io.ByteArrayOutputStream
 
 
@@ -31,28 +33,31 @@ class LocationRepository : ILocationRepository {
 
     //Saves photos in Storage  by way(location name/package name/ photo id(id = key from uriList-hashMap))
     //and then update a uri in package in firestore
-    override fun loadPhotos(
+    suspend override fun loadPhotos(
         location: LocationType, pack: PhotosPackage?, bitmap: Bitmap,
         id: String
     ) {
 
-        val locationRef = storageRef?.child(location.id)?.child(pack?.id!!)
-            ?.child(id)
 
-        var uploadURI: Uri?
-        val baos = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-        val byteArray: ByteArray = baos.toByteArray()
-        val up: UploadTask? = locationRef?.putBytes(byteArray)
+        GlobalScope.async {
+            val locationRef = storageRef?.child(location.id)?.child(pack?.id!!)
+                ?.child(id)
+
+            var uploadURI: Uri?
+            val baos = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+            val byteArray: ByteArray = baos.toByteArray()
+            val up: UploadTask? = locationRef?.putBytes(byteArray)
 
 
-        val task = up!!.continueWithTask<Uri> { locationRef.downloadUrl }
-            .addOnCompleteListener { task ->
-                uploadURI = task.result
-                pack?.uriList!![id] = uploadURI.toString()
-                location.packagesList[pack.id] = pack
-                collection?.document(location.id)?.set(location)
-            }
+            val task = up!!.continueWithTask<Uri> { locationRef.downloadUrl }
+                .addOnCompleteListener { task ->
+                    uploadURI = task.result
+                    pack?.uriList!![id] = uploadURI.toString()
+                    location.packagesList[pack.id] = pack
+                    collection?.document(location.id)?.set(location)
+                }
+        }
     }
 
     //Delete photos from Storage and FireStore
