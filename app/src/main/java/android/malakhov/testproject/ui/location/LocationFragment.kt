@@ -146,6 +146,7 @@ class LocationFragment : Fragment() {
     //Load photos into DB
     suspend fun loadPhotosToDB(uri: String, pack: PhotosPackage?, id: String) {
         GlobalScope.async {
+
             val neededHeight = 600
             val neededWidth = 800
 
@@ -158,6 +159,7 @@ class LocationFragment : Fragment() {
                 .get()
             viewModel.loadPhotosToDB(location, pack, bitmap, id)
         }.await()
+        Log.d("dmkgdkg", "yes")
     }
 
     //Load location into DB

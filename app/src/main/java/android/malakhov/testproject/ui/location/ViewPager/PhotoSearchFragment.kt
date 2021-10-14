@@ -31,7 +31,7 @@ class PhotoSearchFragment(val list: ArrayList<String>,val currPosition: Int) : F
         mViewPager.adapter = object :
             FragmentStatePagerAdapter(fragmentManager) {
             override fun getItem(position: Int): Fragment {
-                val uri: String = list.get(position)
+                val uri: String = list[position]
                 return PhotoPagerFragment.newInstance(uri)
             }
 

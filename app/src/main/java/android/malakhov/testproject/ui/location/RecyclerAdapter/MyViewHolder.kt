@@ -98,7 +98,7 @@ class MyViewHolder(itemView: View, var inflater: LayoutInflater, var type: Int,
                         val imgList = ArrayList(pack.uriList.values)
                         val pos = imgList.indexOf(pack.uriList[image.contentDescription])
                         val nextFrag = PhotoSearchFragment(imgList, pos)
-                        frag.activity?.getSupportFragmentManager()?.beginTransaction()
+                        frag.activity?.supportFragmentManager?.beginTransaction()
                             ?.add(R.id.parentContainer, nextFrag, "findThisFragment")
                             ?.addToBackStack(null)
                             ?.commit()
